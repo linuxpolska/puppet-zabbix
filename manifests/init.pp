@@ -28,16 +28,6 @@ class zabbix (
   $proxy_db_install  = $zabbix::params::proxy_db_install,
   $proxy_db_schema   = $zabbix::params::proxy_db_schema,
 ) inherits zabbix::params {
-  if ( 
-      ($::zabbixversion != undef)
-     and 
-      ( not ($::zabbixversion in $zabbix::params::supported_zabbix_versions) )
-     ) 
-  {
-    fail("repos_version: ${repos_version} is not supported! Current supported versions: ['2.2']")
-  }
-
-
   if ! ($ensure in ['present', 'stopped', 'running']) {
     fail("ensure: ${ensure} - has not allowed value!")
   }
@@ -50,12 +40,17 @@ class zabbix (
   }
 
   if $add_zabbix_repos == 'true' or $add_zabbix_repos == true {
-    stage { 'zabbix::stage::repos':
+    if (! ($repos_version in $zabbix::params::supported_zabbix_versions) ) {
+      $supported = join($zabbix::params::supported_zabbix_versions, ', ')
+      fail("repos_version: ${repos_version} is not supported! Current supported versions: ${supported}")
+    }
+
+    stage { 'zabbix::repos':
       before => Stage['main'],
     }
 
     class { 'zabbix::repos':
-      stage => 'zabbix::stage::repos',
+      stage => 'zabbix::repos',
     }
   }
 
