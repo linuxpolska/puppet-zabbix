@@ -28,7 +28,7 @@ class zabbix (
   $proxy_db_install  = $zabbix::params::proxy_db_install,
   $proxy_db_schema   = $zabbix::params::proxy_db_schema,
 ) inherits zabbix::params {
-  if ! ($ensure in ['present', 'stopped', 'running']) {
+  if (! ($ensure in ['present', 'stopped', 'running'])) {
     fail("ensure: ${ensure} - has not allowed value!")
   }
 
@@ -53,6 +53,7 @@ class zabbix (
       stage => 'zabbix::repos',
     }
   }
+
 
   if $proxy == 'true' or $proxy == true {
     include zabbix::proxy

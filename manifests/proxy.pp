@@ -26,36 +26,57 @@ class zabbix::proxy {
   $db_schema   = $zabbix::proxy_db_schema
 
   if (($ensure != undef) and (! ($ensure in ['present', 'stopped', 'running']))) {
-    fail("ensure: ${ensure} - has not allowed value!")
+    fail("proxy_ensure: ${ensure} - has not allowed value!")
   }
-
-  if $db_type in ['pgsql', 'postgres', 'postgresql'] {
-    $internal_db_type   = 'pgsql'
-    $package_db_backend = 'zabbix-proxy-pgsql'
-  }
-  else {
-    fail("db_type: ${db_type} is not supported! Current supported databases: ['postgresql']")
-  }
-
   $service_ensure = $ensure ? {
     undef   => $zabbix::ensure,
     default => $ensure,
   }
 
-  $package_params = {
-    'name' => $package_db_backend,
-    'ensure' => $version ? {
-      undef   => 'present',
-      default => $version,
-    },
+  if $db_type == 'pgsql' {
+    $package_db_backend = 'zabbix-proxy-pgsql'
+  }
+  else {
+    fail("db_type: ${db_type} is not supported! Current supported databases: ['pgsql']")
+  }
+
+  if $version != undef {
+    $package_params = {
+      'name' => $package_db_backend,
+      'ensure' => $version,
+    }
+  }
+  else {
+    $package_params = {
+      'name' => $package_db_backend,
+    }
+  }
+
+  $all_package_params = merge($zabbix::packages_defaults, $package_params)
+
+  if $all_package_params['ensure'] == 'present' {
+    if $::zabbixversion == undef {
+      $check_installed_package_version = true
+    }
+    else {
+      if ! zabbix_check_if_supported_version($::zabbixversion, $zabbix::params::supported_zabbix_versions) {
+        fail("zabbix version: $::zabbixversion is not supported!")
+      }
+    }
+  }
+  elsif $all_package_params['ensure'] == 'latest' {
+    $check_installed_package_version = true
+  }
+  elsif ! zabbix_check_if_supported_version($all_package_params['ensure'], $zabbix::params::supported_zabbix_versions) {
+    fail("zabbix version: ${all_package_params['ensure']} is not supported!")
   }
 
   # I belive in good zabbix packages relationship, so we can only insall one package
-  ensure_resource('package', 'zabbix-proxy-backend', merge($zabbix::packages_defaults, $package_params))
+  ensure_resource('package', 'zabbix-proxy-backend', $all_package_params)
 
   if $db_install == 'true' or $db_install == true {
     zabbix::db { $db_name:
-      db_type     => $internal_db_type,
+      db_type     => $db_type,
       db_name     => $db_name,
       db_user     => $db_user,
       db_password => $db_password,

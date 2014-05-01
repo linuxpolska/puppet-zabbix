@@ -37,7 +37,7 @@ class zabbix::params {
   $repos_version = '2.2'
   $repos_url     = 'http://repo.zabbix.com'
 
-  $proxy_db_type     = 'postgresql'
+  $proxy_db_type     = 'pgsql'
   $proxy_db_name     = 'zabbix_proxy'
   $proxy_db_user     = 'zabbix_proxy'
   $proxy_db_password = 'zzzzzzzzzz'
