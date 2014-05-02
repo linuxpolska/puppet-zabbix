@@ -37,6 +37,18 @@ class zabbix::params {
   $repos_version = '2.2'
   $repos_url     = 'http://repo.zabbix.com'
 
+  $server_db_type     = 'pgsql'
+  $server_db_name     = 'zabbix_server'
+  $server_db_user     = 'zabbix_server'
+  $server_db_password = 'zzzzzzzzzz'
+  $server_db_host     = '127.0.0.1'
+  $server_db_port     = '5432'
+  $server_db_install  = 'false'
+  #FIXME {
+  # wild card? :(
+  $server_db_schema   = '/usr/share/doc/zabbix-server-pgsql-*/create/schema.sql /usr/share/doc/zabbix-server-pgsql-*/create/images.sql /usr/share/doc/zabbix-server-pgsql-*/create/data.sql'
+  #}
+
   $proxy_db_type     = 'pgsql'
   $proxy_db_name     = 'zabbix_proxy'
   $proxy_db_user     = 'zabbix_proxy'

@@ -15,6 +15,18 @@ class zabbix (
 
   $add_zabbix_repos = false,
 
+  $server             = false,
+  $server_ensure      = undef,
+  $server_version     = undef,
+  $server_db_type     = $zabbix::params::server_db_type,
+  $server_db_name     = $zabbix::params::server_db_name,
+  $server_db_user     = $zabbix::params::server_db_user,
+  $server_db_password = $zabbix::params::server_db_password,
+  $server_db_host     = $zabbix::params::server_db_host,
+  $server_db_port     = $zabbix::params::server_db_port,
+  $server_db_install  = $zabbix::params::server_db_install,
+  $server_db_schema   = $zabbix::params::server_db_schema,
+
   $proxy             = false,
   $proxy_ensure      = undef,
   $proxy_version     = undef,
@@ -58,6 +70,10 @@ class zabbix (
     class { 'zabbix::repos':
       stage => 'zabbix::repos',
     }
+  }
+
+  if $server == 'true' or $server == true {
+    include zabbix::server
   }
 
   if $proxy == 'true' or $proxy == true {

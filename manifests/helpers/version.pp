@@ -1,3 +1,4 @@
+# == Define: zabbix::db
 #
 # === Authors
 #
