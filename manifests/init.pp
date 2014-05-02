@@ -14,7 +14,6 @@ class zabbix (
   $version = undef,       # in version you can use latest
 
   $add_zabbix_repos = false,
-  $repos_version    = $zabbix::params::repos_version,
 
   $proxy             = false,
   $proxy_ensure      = undef,
@@ -31,6 +30,13 @@ class zabbix (
   if (! ($ensure in ['present', 'stopped', 'running'])) {
     fail("ensure: ${ensure} - has not allowed value!")
   }
+
+  #FIXME {
+  # repo_version should be a parameter but first we must resolve FIXME 01
+  # right now one zabbix version is supported so we can remove repo_version
+  #   from parameters
+  $repos_version    = $zabbix::params::repos_version
+  #}
 
   $packages_defaults = {
     'ensure' => $version ? {

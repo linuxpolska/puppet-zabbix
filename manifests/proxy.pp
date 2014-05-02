@@ -80,7 +80,12 @@ class zabbix::proxy {
     owner   => 'root',
     group   => 'zabbix',
     mode    => '640',
+    #FIXME 01 {
+    # if module is used with add_zabbix_repos = false, we can not be sure that
+    #   zabbix::repos_version have good value
+    # $::zabbixversion is not good - because there is condition when fact is empty
     content => template("zabbix/zabbix_proxy.conf-${zabbix::repos_version}.erb"),
+    #}
     require => Zabbix::Helpers::Version['proxy'],
   }
 

@@ -34,18 +34,18 @@ define zabbix::db (
       auth_method => 'md5',
     }
 
+    #FIXME {
+    # Subscribe with refreshonly? On database schema? - Yeh! Why not? I'm so brave!
     if ( (!($db_schema =~ /^$/)) and $db_schema) {
       exec { "${db_name}::schema":
         path        => '/usr/bin:/bin',
         environment => "PGPASSWORD=${db_password}",
         command     => "cat ${db_schema} | psql -U ${db_user} -h localhost ${db_name}",
         require     => Postgresql::Server::Pg_hba_rule["allow $db_user to access database $db_name"],
-        subscribe   => Postgresql::Server::Db["$db_name"],
+        subscribe   => Postgresql::Server::Db[$db_name],
         refreshonly => 'true',
       }
     }
-  }
-  else {
-    fail("db_type: ${db_type} is not supported! Current supported databases: ['postgresql']")
+    #}
   }
 }

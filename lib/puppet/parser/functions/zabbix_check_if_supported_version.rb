@@ -5,7 +5,7 @@ Puppet::Parser::Functions.newfunction(:zabbix_check_if_supported_version, :type 
 
   args[1].each do |version|
     if args[0] =~ /^#{version}/ then
-      result = true
+      result = version
       break
     end
   end

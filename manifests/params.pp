@@ -44,5 +44,8 @@ class zabbix::params {
   $proxy_db_host     = '127.0.0.1'
   $proxy_db_port     = '5432'
   $proxy_db_install  = 'false'
+  #FIXME {
+  # wild card? :(
   $proxy_db_schema   = '/usr/share/doc/zabbix-proxy-pgsql-*/create/schema.sql'
+  #}
 }

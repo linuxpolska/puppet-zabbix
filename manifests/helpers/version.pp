@@ -32,7 +32,7 @@ define zabbix::helpers::version (
   }
 
   if $check_installed_package_version == true {
-    $teststr = gsub(join(prefix($zabbix::params::supported_zabbix_versions, '^'), "\|"), '.', '\.')
+    $teststr = gsub(join(prefix($zabbix::params::supported_zabbix_versions, '^'), '\|'), '.', '\.')
     
     exec { "check if zabbix version for ${name} is supported":
       path    => '/usr/bin:/bin:/usr/sbin:/sbin',
