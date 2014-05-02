@@ -54,7 +54,6 @@ class zabbix (
     }
   }
 
-
   if $proxy == 'true' or $proxy == true {
     include zabbix::proxy
   }

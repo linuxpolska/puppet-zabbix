@@ -37,7 +37,7 @@ class zabbix::proxy {
     $package_db_backend = 'zabbix-proxy-pgsql'
   }
   else {
-    fail("db_type: ${db_type} is not supported! Current supported databases: ['pgsql']")
+    fail("proxy_db_type: ${db_type} is not supported! Current supported databases: ['pgsql']")
   }
 
   if $version != undef {
@@ -54,25 +54,13 @@ class zabbix::proxy {
 
   $all_package_params = merge($zabbix::packages_defaults, $package_params)
 
-  if $all_package_params['ensure'] == 'present' {
-    if $::zabbixversion == undef {
-      $check_installed_package_version = true
-    }
-    else {
-      if ! zabbix_check_if_supported_version($::zabbixversion, $zabbix::params::supported_zabbix_versions) {
-        fail("zabbix version: $::zabbixversion is not supported!")
-      }
-    }
-  }
-  elsif $all_package_params['ensure'] == 'latest' {
-    $check_installed_package_version = true
-  }
-  elsif ! zabbix_check_if_supported_version($all_package_params['ensure'], $zabbix::params::supported_zabbix_versions) {
-    fail("zabbix version: ${all_package_params['ensure']} is not supported!")
-  }
-
   # I belive in good zabbix packages relationship, so we can only insall one package
   ensure_resource('package', 'zabbix-proxy-backend', $all_package_params)
+
+  zabbix::helpers::version { 'proxy':
+    ensure  => $all_package_params['ensure'],
+    require => Package['zabbix-proxy-backend'],
+  }
 
   if $db_install == 'true' or $db_install == true {
     zabbix::db { $db_name:
@@ -81,7 +69,7 @@ class zabbix::proxy {
       db_user     => $db_user,
       db_password => $db_password,
       db_schema   => $db_schema,
-      require     => Package['zabbix-proxy-backend'],
+      require     => Zabbix::Helpers::Version['proxy'],
       before      => File['zabbix-proxy.conf'],
     }
   }
@@ -93,7 +81,7 @@ class zabbix::proxy {
     group   => 'zabbix',
     mode    => '640',
     content => template("zabbix/zabbix_proxy.conf-${zabbix::repos_version}.erb"),
-    require => Package['zabbix-proxy-backend'],
+    require => Zabbix::Helpers::Version['proxy'],
   }
 
   if $service_ensure != 'present' {
