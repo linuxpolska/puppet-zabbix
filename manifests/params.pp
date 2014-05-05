@@ -16,6 +16,10 @@ class zabbix::params {
       $supported_zabbix_versions = ['2.2']
       $supported_release         = ['5', '6']
       $supported_architecture    = ['i386', 'x86_64']
+
+      $apache_user    = 'apache'
+      $apache_group   = 'apache'
+      $apache_service = 'httpd'
     }
 
     default: {
@@ -60,4 +64,13 @@ class zabbix::params {
   # wild card? :(
   $proxy_db_schema   = '/usr/share/doc/zabbix-proxy-pgsql-*/create/schema.sql'
   #}
+
+  $web_db_type     = 'pgsql'
+  $web_db_name     = 'zabbix_server'
+  $web_db_user     = 'zabbix_server'
+  $web_db_password = 'zzzzzzzzzz'
+  $web_db_host     = '127.0.0.1'
+  $web_db_port     = '5432'
+  $web_server_host = '127.0.0.1'
+  $web_server_port = '10051'
 }

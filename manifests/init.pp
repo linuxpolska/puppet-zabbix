@@ -15,6 +15,18 @@ class zabbix (
 
   $add_zabbix_repos = false,
 
+  $web              = false,
+  $web_timezone     = undef,
+  $web_db_type      = $zabbix::params::web_db_type,
+  $web_db_name      = $zabbix::params::web_db_name,
+  $web_db_user      = $zabbix::params::web_db_user,
+  $web_db_password  = $zabbix::params::web_db_password,
+  $web_db_host      = $zabbix::params::web_db_host,
+  $web_db_port      = $zabbix::params::web_db_port,
+  $web_server_name  = undef,
+  $web_server_host  = $zabbix::params::web_server_ip,
+  $web_server_port  = $zabbix::params::web_server_port,
+
   $server             = false,
   $server_ensure      = undef,
   $server_version     = undef,
@@ -74,6 +86,10 @@ class zabbix (
 
   if $server == 'true' or $server == true {
     include zabbix::server
+  }
+
+  if $web == 'true' or $web == true {
+    include zabbix::web
   }
 
   if $proxy == 'true' or $proxy == true {

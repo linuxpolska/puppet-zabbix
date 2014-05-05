@@ -62,6 +62,15 @@ class zabbix::server {
     require => Package['zabbix-server-backend'],
   }
 
+  if $::selinux == 'true' {
+    selboolean { 'zabbix_can_network':
+      persistent => 'true',
+      value      => 'on',
+      require    => Zabbix::Helpers::Version['server'],
+      before     => File['zabbix-server.conf'],
+    }
+  }
+
   if $db_install == 'true' or $db_install == true {
     zabbix::db { $db_name:
       db_type     => $db_type,

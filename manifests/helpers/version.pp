@@ -10,6 +10,7 @@
 
 define zabbix::helpers::version (
   $ensure,
+  $pkg_name = 'zabbix',
 ) {
   if ! ($caller_module_name =~ /^zabbix$/) {
     fail("Please use class zabbix only!")
@@ -37,7 +38,7 @@ define zabbix::helpers::version (
     
     exec { "check if zabbix version for ${name} is supported":
       path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-      command => "rpm -q zabbix --queryformat %{VERSION} | grep -q '${teststr}'",
+      command => "rpm -q $pkg_name --queryformat %{VERSION} | grep -q '${teststr}'",
     }
   }
 }
