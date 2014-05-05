@@ -15,6 +15,12 @@ class zabbix (
 
   $add_zabbix_repos = false,
 
+  $agent               = true,
+  $agent_ensure        = undef,
+  $agent_version       = undef,
+  $agent_server        = $zabbix::params::agent_server,
+  $agent_serveractive  = $zabbix::params::agent_serveractive,
+
   $web              = false,
   $web_timezone     = undef,
   $web_db_type      = $zabbix::params::web_db_type,
@@ -42,6 +48,7 @@ class zabbix (
   $proxy             = false,
   $proxy_ensure      = undef,
   $proxy_version     = undef,
+  $proxy_server      = $zabbix::params::proxy_server,
   $proxy_db_type     = $zabbix::params::proxy_db_type,
   $proxy_db_name     = $zabbix::params::proxy_db_name,
   $proxy_db_user     = $zabbix::params::proxy_db_user,
@@ -94,5 +101,9 @@ class zabbix (
 
   if $proxy == 'true' or $proxy == true {
     include zabbix::proxy
+  }
+
+  if $agent == 'true' or $agent == true {
+    include zabbix::agent
   }
 }

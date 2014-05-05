@@ -16,6 +16,8 @@ class zabbix::proxy {
   $ensure      = $zabbix::proxy_ensure
   $version     = $zabbix::proxy_version
 
+  $server = $zabbix::proxy_server
+
   $db_type     = $zabbix::proxy_db_type
   $db_name     = $zabbix::proxy_db_name
   $db_user     = $zabbix::proxy_db_user

@@ -64,6 +64,7 @@ class zabbix::params {
   # wild card? :(
   $proxy_db_schema   = '/usr/share/doc/zabbix-proxy-pgsql-*/create/schema.sql'
   #}
+  $proxy_server      = '127.0.0.1'
 
   $web_db_type     = 'pgsql'
   $web_db_name     = 'zabbix_server'
@@ -73,4 +74,7 @@ class zabbix::params {
   $web_db_port     = '5432'
   $web_server_host = '127.0.0.1'
   $web_server_port = '10051'
+
+  $agent_server       = '127.0.0.1'
+  $agent_serveractive = '127.0.0.1'
 }
